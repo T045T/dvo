@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(dvo_core)
 
 # Set the build type.  Options are:
 #  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
@@ -9,12 +9,10 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 #set(ROS_BUILD_TYPE RelWithDebInfo)
 
-rosbuild_init()
-
 #set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+#set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
@@ -24,44 +22,70 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
+find_package(catkin REQUIRED COMPONENTS
+  cmake_modules
+  )
 # Eigen3 library
 find_package(Eigen REQUIRED)
-include_directories(${Eigen_INCLUDE_DIRS})
 
 # VTK library
 find_package(VTK REQUIRED)
-include_directories(${VTK_INCLUDE_DIRS})
+find_package(PCL REQUIRED)
+find_package(TBB REQUIRED)
+find_package(Boost REQUIRED COMPONENTS thread)
+find_package(sophus REQUIRED)
+find_package(OpenCV REQUIRED)
 
-# SSE flags
-rosbuild_check_for_sse()
+message("sophus include dirs: ${sophus_INCLUDE_DIRS}")
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+  ${sophus_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${Eigen_INCLUDE_DIRS}
+  ${VTK_INCLUDE_DIRS}
+  ${TBB_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  )
 
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
-   "${SSE_FLAGS} -O3 -march=native"
-)
+catkin_package(
+  INCLUDE_DIRS include
+  DEPENDS PCL sophus
+  LIBRARIES ${PROJECT_NAME}
+  )
 
-rosbuild_add_library(${PROJECT_NAME} 
-    src/core/interpolation.cpp
-    src/core/intrinsic_matrix.cpp
-    src/core/least_squares.cpp
-    src/core/math_sse.cpp
-    src/core/rgbd_image.cpp
-    src/core/rgbd_image_sse.cpp
-    src/core/surface_pyramid.cpp
-    src/core/weight_calculation.cpp
-    
-    src/util/histogram.cpp
-    
-    src/visualization/async_point_cloud_builder.cpp
-    src/visualization/point_cloud_aggregator.cpp
-    src/visualization/visualizer.cpp
-    src/visualization/camera_trajectory_visualizer.cpp
-    src/visualization/pcl_camera_trajetory_visualizer.cpp
-    
-    src/dense_tracking.cpp
-    src/dense_tracking_config.cpp
-)
+add_definitions("-msse3")
 
-target_link_libraries(${PROJECT_NAME} 
-    tbb
-    boost_thread
-)
+add_library(${PROJECT_NAME}
+  src/core/interpolation.cpp
+  src/core/intrinsic_matrix.cpp
+  src/core/least_squares.cpp
+  src/core/math_sse.cpp
+  src/core/rgbd_image.cpp
+  src/core/rgbd_image_sse.cpp
+  src/core/surface_pyramid.cpp
+  src/core/weight_calculation.cpp
+
+  src/util/histogram.cpp
+
+  src/visualization/async_point_cloud_builder.cpp
+  src/visualization/point_cloud_aggregator.cpp
+  src/visualization/visualizer.cpp
+  src/visualization/camera_trajectory_visualizer.cpp
+  src/visualization/pcl_camera_trajetory_visualizer.cpp
+
+  src/dense_tracking.cpp
+  src/dense_tracking_config.cpp
+  )
+
+target_link_libraries(${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  ${sophus_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${TBB_LIBRARIES}
+  ${VTK_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  )
+
