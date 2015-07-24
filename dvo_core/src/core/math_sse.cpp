@@ -237,36 +237,38 @@ void MathSse<Sse::Enabled, double>::addOuterProduct( Eigen::Matrix<double, 6, 6>
 template<>
 void MathSse<Sse::Enabled, float>::add(Eigen::Matrix<float, 6, 1>& vec, const Eigen::Matrix<float, 6, 1>& other, const float& scale)
 {
-  __m128 s = _mm_set1_ps(scale);
-  __m128 v1 = _mm_load_ps(other.data());
-  __m128 v2 = _mm_loadl_pi(s, (__m64*)(other.data() + 4));
+  vec += other * scale;
+  // __m128 s = _mm_set1_ps(scale);
+  // __m128 v1 = _mm_load_ps(other.data());
+  // __m128 v2 = _mm_loadl_pi(s, (__m64*)(other.data() + 4));
 
-  _mm_store_ps(
-      vec.data(),
-      _mm_add_ps(
-          _mm_load_ps(vec.data()),
-          _mm_mul_ps(v1, s)
-      )
-  );
+  // _mm_store_ps(
+  //     vec.data(),
+  //     _mm_add_ps(
+  //         _mm_load_ps(vec.data()),
+  //         _mm_mul_ps(v1, s)
+  //     )
+  // );
 
-  _mm_storel_pi(
-      (__m64*)(vec.data() + 4),
-      _mm_add_ps(
-          _mm_loadl_pi(s, (__m64*)(vec.data() + 4)),
-          _mm_mul_ps(v2, s)
-      )
-  );
+  // _mm_storel_pi(
+  //     (__m64*)(vec.data() + 4),
+  //     _mm_add_ps(
+  //         _mm_loadl_pi(s, (__m64*)(vec.data() + 4)),
+  //         _mm_mul_ps(v2, s)
+  //     )
+  // );
 }
 
 template<>
 void MathSse<Sse::Enabled, double>::add(Eigen::Matrix<double, 6, 1>& vec, const Eigen::Matrix<double, 6, 1>& other, const double& scale)
 {
-  __m128d s = _mm_set1_pd(scale);
-  double* target_ptr = vec.data();
+  vec += other * scale;
+  // __m128d s = _mm_set1_pd(scale);
+  // double* target_ptr = vec.data();
 
-  _mm_store_pd(target_ptr, _mm_add_pd(_mm_load_pd(target_ptr), _mm_mul_pd(s, _mm_load_pd(other.data() + 0)))); target_ptr += 2;
-  _mm_store_pd(target_ptr, _mm_add_pd(_mm_load_pd(target_ptr), _mm_mul_pd(s, _mm_load_pd(other.data() + 2)))); target_ptr += 2;
-  _mm_store_pd(target_ptr, _mm_add_pd(_mm_load_pd(target_ptr), _mm_mul_pd(s, _mm_load_pd(other.data() + 4)))); target_ptr += 2;
+  // _mm_store_pd(target_ptr, _mm_add_pd(_mm_load_pd(target_ptr), _mm_mul_pd(s, _mm_load_pd(other.data() + 0)))); target_ptr += 2;
+  // _mm_store_pd(target_ptr, _mm_add_pd(_mm_load_pd(target_ptr), _mm_mul_pd(s, _mm_load_pd(other.data() + 2)))); target_ptr += 2;
+  // _mm_store_pd(target_ptr, _mm_add_pd(_mm_load_pd(target_ptr), _mm_mul_pd(s, _mm_load_pd(other.data() + 4)))); target_ptr += 2;
 }
 
 } /* namespace core */

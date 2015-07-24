@@ -58,6 +58,7 @@ catkin_package(
   )
 
 add_definitions("-msse3")
+add_definitions("-mfpmath=sse")
 
 add_library(${PROJECT_NAME}
   src/camera_base.cpp

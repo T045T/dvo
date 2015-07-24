@@ -43,6 +43,7 @@ public:
   struct BuildJob
   {
   public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
     dvo::core::RgbdImage image;
     const dvo::core::IntrinsicMatrix intrinsics;
     const Eigen::Affine3d pose;
