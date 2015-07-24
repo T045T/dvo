@@ -23,10 +23,10 @@
   <run_depend>sophus</run_depend>
   <run_depend>common_rosdeps</run_depend>
   
-  <export>
-      <cpp cflags="`rosboost-cfg --cflags` -I${prefix}/include"
-        lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -ldvo_core"/>
-  </export>
+  <!-- <export> -->
+  <!--     <cpp cflags="`rosboost-cfg -/-cflags` -I${prefix}/include" -->
+  <!--       lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -ldvo_core"/> -->
+  <!-- </export> -->
 </package>
 
 
