@@ -1,0 +1,24 @@
+<package>
+  <name>
+    sophus
+  </name>
+  <version>0.0.42</version>
+  <description>
+    sophus
+  </description>
+  <author>Christian Kerl</author>
+  <maintainer email="tamer@ids-helix.fzi.de">Tamer</maintainer>
+  <license>GPL</license>
+  <url>http://https://github.com/strasdat/Sophus/tree/a621ff2e56c56c839a6c40418d42c3c254424b5c</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>cmake_modules</build_depend>
+  
+  <export>
+      <cpp cflags="`rosboost-cfg --cflags` -I${prefix}/include"
+        lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -ldvo_core"/>
+  </export>
+</package>
+
+

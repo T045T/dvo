@@ -24,7 +24,7 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Core>
 #include <Eigen/Geometry>
-#include <sophus/se3.hpp>
+#include <sophus/se3.h>
 
 #include <dvo/core/datatypes.h>
 #include <dvo/core/intrinsic_matrix.h>

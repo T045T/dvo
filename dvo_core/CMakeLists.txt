@@ -24,6 +24,7 @@ project(dvo_core)
 
 find_package(catkin REQUIRED COMPONENTS
   cmake_modules
+  sophus
   )
 # Eigen3 library
 find_package(Eigen REQUIRED)
@@ -33,14 +34,11 @@ find_package(VTK REQUIRED)
 find_package(PCL REQUIRED)
 find_package(TBB REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
-find_package(sophus REQUIRED)
 find_package(OpenCV REQUIRED)
 
-message("sophus include dirs: ${sophus_INCLUDE_DIRS}")
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${sophus_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${Eigen_INCLUDE_DIRS}
@@ -51,11 +49,13 @@ include_directories(
 
 catkin_package(
   INCLUDE_DIRS include
-  DEPENDS PCL sophus
+  DEPENDS PCL
+  CATKIN_DEPENDS sophus
   LIBRARIES ${PROJECT_NAME}
   )
 
 add_definitions("-msse3")
+add_definitions("-mfpmath=sse")
 
 add_library(${PROJECT_NAME}
   src/core/interpolation.cpp
@@ -81,7 +81,6 @@ add_library(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
-  ${sophus_LIBRARIES}
   ${Boost_LIBRARIES}
   ${TBB_LIBRARIES}
   ${VTK_LIBRARIES}
