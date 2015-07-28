@@ -58,7 +58,7 @@ CameraDenseTracker::CameraDenseTracker(ros::NodeHandle& nh, ros::NodeHandle& nh_
   ReconfigureServer::CallbackType reconfigure_server_callback = boost::bind(&CameraDenseTracker::handleConfig, this, _1, _2);
   reconfigure_server_.setCallback(reconfigure_server_callback);
 
-  dvo_ros::util::tryGetTransform(from_baselink_to_asus, tl, "base_link", "asus");
+  dvo_ros::util::tryGetTransform(from_baselink_to_asus, tl, "robot_base_link", "camera_rgb_optical_frame");
 
   ROS_INFO_STREAM("transformation: base_link -> asus" << std::endl << from_baselink_to_asus.matrix());
 
